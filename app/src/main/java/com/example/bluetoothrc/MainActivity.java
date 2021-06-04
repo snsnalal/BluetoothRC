@@ -1,5 +1,6 @@
 package com.example.bluetoothrc;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -20,6 +22,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
+import android.util.Range;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,6 +42,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
+
+import io.github.controlwear.virtual.joystick.android.JoystickView;
 
 public class MainActivity extends AppCompatActivity {
     BluetoothAdapter btAdapter;
@@ -63,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         btnSearch = (Button) findViewById(R.id.btn_search);
         btnforward = (Button)findViewById(R.id.button);
@@ -208,9 +215,72 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        JoystickView joystick = (JoystickView) findViewById(R.id.joystick);
+        joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onMove(int angle, int strength) {
+                // do whatever you want
+                double rad = Math.toRadians(angle);
+                double dist = strength / 100.0;
+                double x = dist * Math.cos(rad);
+                double y = dist * Math.sin(rad);
+
+                Range<Integer> bounds = new Range<>(-127, 127);
+
+                int adjX = bounds.clamp((int) ((double) x * 127));
+                int adjY = bounds.clamp((int) ((double) y * -127));
+
+                Range<Integer> bounds2 = new Range<>(0, 127);
+                Range<Integer> bounds3 = new Range<>(128, 255);
+
+                /*
+                int ax;
+                int ay;
+                if(adjX == 0)
+                {
+                    ax = 0;
+                }
+                else if(adjX % 2 ==0)
+                {
+                    ax = (adjX + 127)/2 + 1;
+                }
+                else
+                {
+                    ax =(int)((adjX + 127)/2 + 0.5);
+                }
+
+                if(adjY == 0)
+                {
+                    ay = (adjY+127)/2 + 128;
+                }
+                else if(adjY %2 ==0)
+                {
+                    ay = (adjY+127)/2 + 129;
+                }
+                else
+                {
+                    ay = (int)((adjY+127)/2 + 128.5);
+                }
+
+                    for(int i = 0; i < 2; i++)
+                    {
+                        if(i == 0)
+                        {
+                            if(connectedThread!=null){ connectedThread.write(String.valueOf(ax)); }
+                        }
+                        else
+                        {
+                            if(connectedThread!=null){ connectedThread.write(String.valueOf(ay)); }
+                        }
+                    }
+
+                 */
+                }
+        });
     }
-
-
 
     long _startTime;
     @Override
@@ -234,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
     private RecognitionListener listener = new RecognitionListener() {
         @Override
         public void onReadyForSpeech(Bundle params) {
-            System.out.println("onReadyForSpeech.........................");
+
         }
         @Override
         public void onBeginningOfSpeech() {
@@ -243,17 +313,17 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onRmsChanged(float rmsdB) {
-            System.out.println("onRmsChanged.........................");
+
         }
 
         @Override
         public void onBufferReceived(byte[] buffer) {
-            System.out.println("onBufferReceived.........................");
+
         }
 
         @Override
         public void onEndOfSpeech() {
-            System.out.println("onEndOfSpeech.........................");
+
         }
 
         @Override
@@ -297,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(connectedThread!=null){ connectedThread.write("0"); }
             }
-            mRecognizer.startListening(i); //음성인식이 계속 되는 구문이니 필요에 맞게 쓰시길 바람
+            mRecognizer.startListening(i); //음성인식이 계속 되는 구문
         }
     };
 
@@ -354,7 +424,6 @@ public class MainActivity extends AppCompatActivity {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
         }
-
         @Override
         public void run() {
             byte[] buffer = new byte[1024];  // buffer store for the stream
@@ -377,7 +446,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         /* Call this from the main activity to send data to the remote device */
         public void write(String input) {
             byte[] bytes = input.getBytes();           //converts entered String into bytes
@@ -386,7 +454,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
             }
         }
-
         /* Call this from the main activity to shutdown the connection */
         public void cancel() {
             try {
@@ -452,13 +519,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        /**
-         * @param initialInterval The interval after first click event
-         * @param normalInterval The interval after second and subsequent click
-         *       events
-         * @param clickListener The OnClickListener, that will be called
-         *       periodically
-         */
         public RepeatListener(int initialInterval, int normalInterval,
                               View.OnClickListener clickListener) {
             if (clickListener == null)
@@ -488,9 +548,7 @@ public class MainActivity extends AppCompatActivity {
                     touchedView = null;
                     return true;
             }
-
             return false;
         }
-
     }
 }
