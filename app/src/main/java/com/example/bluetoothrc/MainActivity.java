@@ -48,7 +48,7 @@ import io.github.controlwear.virtual.joystick.android.JoystickView;
 public class MainActivity extends AppCompatActivity {
     BluetoothAdapter btAdapter;
     private final static int REQUEST_ENABLE_BT = 1;
-    Button btnSearch,btnpaired ,btnforward, btnbackward, btnright, btnleft,btnstop, stt;
+    Button btnSearch,btnpaired,stt,btnstop;//, btnforward, btnbackward, btnright, btnleft;
     Set<BluetoothDevice> pairedDevices;
     ArrayAdapter<String> btArrayAdapter;
     ArrayList<String> deviceAddressArray;
@@ -72,11 +72,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         btnSearch = (Button) findViewById(R.id.btn_search);
+        /*
         btnforward = (Button)findViewById(R.id.button);
         btnleft = (Button)findViewById(R.id.button2);
         btnright = (Button)findViewById(R.id.button3);
-        btnstop = (Button)findViewById(R.id.button4);
         btnbackward = (Button)findViewById(R.id.button5);
+*/
+
+        btnstop = (Button)findViewById(R.id.button4);
         btnpaired = (Button)findViewById(R.id.button7);
 
         textView = (TextView)findViewById(R.id.textView);
@@ -144,11 +147,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        /*
         btnforward.setOnTouchListener(new RepeatListener(1000, 1000, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(connectedThread!=null){ connectedThread.write("1"); }
+                if(connectedThread!=null){ connectedThread.write("-1"); }
             }
         }));
 
@@ -156,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         btnbackward.setOnTouchListener(new RepeatListener(1000, 1000, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(connectedThread!=null){ connectedThread.write("4"); }
+                if(connectedThread!=null){ connectedThread.write("-4"); }
             }
         }));
 
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         btnright.setOnTouchListener(new RepeatListener(1000, 1000, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(connectedThread!=null){ connectedThread.write("2"); }
+                if(connectedThread!=null){ connectedThread.write("-2"); }
             }
         }));
 
@@ -173,22 +176,49 @@ public class MainActivity extends AppCompatActivity {
         btnleft.setOnTouchListener(new RepeatListener(1000, 1000, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(connectedThread!=null){ connectedThread.write("3"); }
+                if(connectedThread!=null){ connectedThread.write("-3"); }
             }
         }));
+        */
+          btnstop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(connectedThread!=null)
+                {
+                    for(int i = 0; i < 2; i++)
+                    {
+                        if(i==0)
+                        {
+                            if(connectedThread!=null)
+                            {
+                                connectedThread.write(String.valueOf(63));
+                            }
 
+                        }
+                        else
+                        {
+                            if(connectedThread!=null)
+                            {
+                                connectedThread.write(String.valueOf(191));
+                            }
 
+                        }
+                    }
+                }
+            }
+        });
+/*
         btnstop.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN)
                 {
-                    if(connectedThread!=null){ connectedThread.write("0"); }
+                    if(connectedThread!=null){ connectedThread.write(String.valueOf(270)); }
                 }
                 return false;
             }
         });
-
+*/
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -232,54 +262,37 @@ public class MainActivity extends AppCompatActivity {
 
                 int adjX = bounds.clamp((int) ((double) x * 127));
                 int adjY = bounds.clamp((int) ((double) y * -127));
+                int ax = map2(adjX,-127, 127, 0, 127);
+                int ay = map2(adjY,-127, 127, 128, 255);
 
-                Range<Integer> bounds2 = new Range<>(0, 127);
-                Range<Integer> bounds3 = new Range<>(128, 255);
-
-                /*
-                int ax;
-                int ay;
-                if(adjX == 0)
+                //if(connectedThread!=null){ connectedThread.write(String.valueOf(ax)+" "+String.valueOf(ay)); }
+                for(int i = 0; i < 2; i++)
                 {
-                    ax = 0;
-                }
-                else if(adjX % 2 ==0)
-                {
-                    ax = (adjX + 127)/2 + 1;
-                }
-                else
-                {
-                    ax =(int)((adjX + 127)/2 + 0.5);
-                }
-
-                if(adjY == 0)
-                {
-                    ay = (adjY+127)/2 + 128;
-                }
-                else if(adjY %2 ==0)
-                {
-                    ay = (adjY+127)/2 + 129;
-                }
-                else
-                {
-                    ay = (int)((adjY+127)/2 + 128.5);
-                }
-
-                    for(int i = 0; i < 2; i++)
+                    if(i==0)
                     {
-                        if(i == 0)
+                        if(connectedThread!=null)
                         {
-                            if(connectedThread!=null){ connectedThread.write(String.valueOf(ax)); }
+                            connectedThread.write(String.valueOf(ax));
                         }
-                        else
-                        {
-                            if(connectedThread!=null){ connectedThread.write(String.valueOf(ay)); }
-                        }
-                    }
 
-                 */
+                    }
+                    else
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(ay));
+                        }
+
+                    }
+                }
+
+
                 }
         });
+    }
+
+    public int map2(int x, int in_min, int in_max, int out_min, int out_max) {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
     long _startTime;
@@ -308,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         public void onBeginningOfSpeech() {
-            Toast.makeText(getApplicationContext(), "지금부터 말을 해주세요!", Toast.LENGTH_SHORT).show();
+
         }
 
         @Override
@@ -323,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onEndOfSpeech() {
-
+            Toast.makeText(getApplicationContext(), "끝", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -349,25 +362,114 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(rs[0]);
             if (textView.getText().equals("전진"))
             {
-                if(connectedThread!=null){ connectedThread.write("1"); }
+                for(int i = 0; i < 2; i++)
+                {
+                    if(i==0)
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(107));
+                        }
+                    }
+                    else
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(161));
+                        }
+
+                    }
+                }
             }
             else if(textView.getText().equals("후진"))
             {
-                if(connectedThread!=null){ connectedThread.write("4"); }
+                for(int i = 0; i < 2; i++)
+                {
+                    if(i==0)
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(55));
+                        }
+
+                    }
+                    else
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(204));
+                        }
+
+                    }
+                }
             }
             else if(textView.getText().equals("왼쪽"))
             {
-                if(connectedThread!=null){ connectedThread.write("3"); }
+                for(int i = 0; i < 2; i++)
+                {
+                    if(i==0)
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(69));
+                        }
+
+                    }
+                    else
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(184));
+                        }
+
+                    }
+                }
             }
             else if(textView.getText().equals("오른쪽"))
             {
-                if(connectedThread!=null){ connectedThread.write("2"); }
+                for(int i = 0; i < 2; i++)
+                {
+                    if(i==0)
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(76));
+                        }
+
+                    }
+                    else
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(186));
+                        }
+
+                    }
+                }
             }
             else if(textView.getText().equals("정지"))
             {
-                if(connectedThread!=null){ connectedThread.write("0"); }
+                for(int i = 0; i < 2; i++)
+                {
+                    if(i==0)
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(63));
+                        }
+
+                    }
+                    else
+                    {
+                        if(connectedThread!=null)
+                        {
+                            connectedThread.write(String.valueOf(191));
+                        }
+
+                    }
+                }
             }
-            mRecognizer.startListening(i); //음성인식이 계속 되는 구문
+            //mRecognizer.startListening(i); //음성인식이 계속 되는 구문
         }
     };
 
@@ -450,7 +552,9 @@ public class MainActivity extends AppCompatActivity {
         public void write(String input) {
             byte[] bytes = input.getBytes();           //converts entered String into bytes
             try {
-                mmOutStream.write(bytes);
+                int a = Integer.parseInt(input);
+                mmOutStream.write(a);
+                Log.d("Mytag", String.valueOf(a));
             } catch (IOException e) {
             }
         }
@@ -541,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
                     clickListener.onClick(view);
                     return true;
                 case MotionEvent.ACTION_UP:
-                    if(connectedThread!=null){ connectedThread.write("0"); }
+                    if(connectedThread!=null){ connectedThread.write(String.valueOf(700)); }
                 case MotionEvent.ACTION_CANCEL:
                     handler.removeCallbacks(handlerRunnable);
                     touchedView.setPressed(false);
