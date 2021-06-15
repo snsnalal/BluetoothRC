@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onMove(int angle, int strength) {
-                // do whatever you want
+
                 double rad = Math.toRadians(angle);
                 double dist = strength / 100.0;
                 double x = dist * Math.cos(rad);
@@ -265,29 +265,15 @@ public class MainActivity extends AppCompatActivity {
                 int ax = map2(adjX,-127, 127, 0, 127);
                 int ay = map2(adjY,-127, 127, 128, 255);
 
-                //if(connectedThread!=null){ connectedThread.write(String.valueOf(ax)+" "+String.valueOf(ay)); }
-                for(int i = 0; i < 2; i++)
+
+                if(connectedThread!=null)
                 {
-                    if(i==0)
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(ax));
-                        }
-
-                    }
-                    else
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(ay));
-                        }
-
-                    }
+                    connectedThread.write(String.valueOf(ax));
+                    connectedThread.write(String.valueOf(ay));
                 }
 
 
-                }
+            }
         });
     }
 
@@ -362,111 +348,42 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(rs[0]);
             if (textView.getText().equals("전진"))
             {
-                for(int i = 0; i < 2; i++)
+                if(connectedThread!=null)
                 {
-                    if(i==0)
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(107));
-                        }
-                    }
-                    else
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(161));
-                        }
-
-                    }
+                    connectedThread.write(String.valueOf(107));
+                    connectedThread.write(String.valueOf(161));
                 }
             }
             else if(textView.getText().equals("후진"))
             {
-                for(int i = 0; i < 2; i++)
+                if(connectedThread!=null)
                 {
-                    if(i==0)
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(55));
-                        }
-
-                    }
-                    else
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(204));
-                        }
-
-                    }
+                    connectedThread.write(String.valueOf(55));
+                    connectedThread.write(String.valueOf(204));
                 }
             }
             else if(textView.getText().equals("왼쪽"))
             {
-                for(int i = 0; i < 2; i++)
+                if(connectedThread!=null)
                 {
-                    if(i==0)
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(69));
-                        }
-
-                    }
-                    else
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(184));
-                        }
-
-                    }
+                    connectedThread.write(String.valueOf(69));
+                    connectedThread.write(String.valueOf(184));
                 }
             }
             else if(textView.getText().equals("오른쪽"))
             {
-                for(int i = 0; i < 2; i++)
+                if(connectedThread!=null)
                 {
-                    if(i==0)
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(76));
-                        }
-
-                    }
-                    else
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(186));
-                        }
-
-                    }
+                    connectedThread.write(String.valueOf(76));
+                    connectedThread.write(String.valueOf(186));
                 }
             }
             else if(textView.getText().equals("정지"))
             {
-                for(int i = 0; i < 2; i++)
+                if(connectedThread!=null)
                 {
-                    if(i==0)
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(63));
-                        }
-
-                    }
-                    else
-                    {
-                        if(connectedThread!=null)
-                        {
-                            connectedThread.write(String.valueOf(191));
-                        }
-
-                    }
+                    connectedThread.write(String.valueOf(63));
+                    connectedThread.write(String.valueOf(191));
                 }
             }
             //mRecognizer.startListening(i); //음성인식이 계속 되는 구문
