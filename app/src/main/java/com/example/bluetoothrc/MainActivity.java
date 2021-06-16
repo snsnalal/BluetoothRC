@@ -350,15 +350,15 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(connectedThread!=null)
                 {
-                    connectedThread.write(String.valueOf(107));
-                    connectedThread.write(String.valueOf(161));
+                    connectedThread.write(String.valueOf(76));
+                    connectedThread.write(String.valueOf(180));
                 }
             }
             else if(textView.getText().equals("후진"))
             {
                 if(connectedThread!=null)
                 {
-                    connectedThread.write(String.valueOf(55));
+                    connectedThread.write(String.valueOf(48));
                     connectedThread.write(String.valueOf(204));
                 }
             }
@@ -366,16 +366,17 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(connectedThread!=null)
                 {
-                    connectedThread.write(String.valueOf(69));
-                    connectedThread.write(String.valueOf(184));
+
+                    connectedThread.write(String.valueOf(66));
+                    connectedThread.write(String.valueOf(183));
                 }
             }
             else if(textView.getText().equals("오른쪽"))
             {
                 if(connectedThread!=null)
                 {
-                    connectedThread.write(String.valueOf(76));
-                    connectedThread.write(String.valueOf(186));
+                    connectedThread.write(String.valueOf(86));
+                    connectedThread.write(String.valueOf(191));
                 }
             }
             else if(textView.getText().equals("정지"))
