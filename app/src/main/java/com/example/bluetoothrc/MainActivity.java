@@ -48,7 +48,7 @@ import io.github.controlwear.virtual.joystick.android.JoystickView;
 public class MainActivity extends AppCompatActivity {
     BluetoothAdapter btAdapter;
     private final static int REQUEST_ENABLE_BT = 1;
-    Button btnSearch,btnpaired,stt,btnstop;//, btnforward, btnbackward, btnright, btnleft;
+    Button btnSearch,btnpaired,stt,btnstop;
     Set<BluetoothDevice> pairedDevices;
     ArrayAdapter<String> btArrayAdapter;
     ArrayList<String> deviceAddressArray;
@@ -69,16 +69,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         btnSearch = (Button) findViewById(R.id.btn_search);
-        /*
-        btnforward = (Button)findViewById(R.id.button);
-        btnleft = (Button)findViewById(R.id.button2);
-        btnright = (Button)findViewById(R.id.button3);
-        btnbackward = (Button)findViewById(R.id.button5);
-*/
-
         btnstop = (Button)findViewById(R.id.button4);
         btnpaired = (Button)findViewById(R.id.button7);
 
@@ -147,39 +138,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        btnforward.setOnTouchListener(new RepeatListener(1000, 1000, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(connectedThread!=null){ connectedThread.write("-1"); }
-            }
-        }));
 
-
-        btnbackward.setOnTouchListener(new RepeatListener(1000, 1000, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(connectedThread!=null){ connectedThread.write("-4"); }
-            }
-        }));
-
-
-        btnright.setOnTouchListener(new RepeatListener(1000, 1000, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(connectedThread!=null){ connectedThread.write("-2"); }
-            }
-        }));
-
-
-
-        btnleft.setOnTouchListener(new RepeatListener(1000, 1000, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(connectedThread!=null){ connectedThread.write("-3"); }
-            }
-        }));
-        */
           btnstop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,18 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-/*
-        btnstop.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN)
-                {
-                    if(connectedThread!=null){ connectedThread.write(String.valueOf(270)); }
-                }
-                return false;
-            }
-        });
-*/
+
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -271,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
                     connectedThread.write(String.valueOf(ax));
                     connectedThread.write(String.valueOf(ay));
                 }
-
 
             }
         });
@@ -350,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(connectedThread!=null)
                 {
-                    connectedThread.write(String.valueOf(76));
-                    connectedThread.write(String.valueOf(180));
+                    connectedThread.write(String.valueOf(95));
+                    connectedThread.write(String.valueOf(170));
                 }
             }
             else if(textView.getText().equals("후진"))
@@ -362,21 +309,72 @@ public class MainActivity extends AppCompatActivity {
                     connectedThread.write(String.valueOf(204));
                 }
             }
+            else if(textView.getText().equals("좌회전"))
+            {
+                if(connectedThread!=null)
+                {
+                    connectedThread.write(String.valueOf(63));
+                    connectedThread.write(String.valueOf(180));
+
+                    Handler mHandler = new Handler();
+                    mHandler.postDelayed(new Runnable()  {
+                        public void run() {
+                            // 시간 지난 후 실행할 코딩
+                            connectedThread.write(String.valueOf(63));
+                            connectedThread.write(String.valueOf(191));
+                        }
+                    }, 500);
+                }
+            }
+            else if(textView.getText().equals("우회전"))
+            {
+                if(connectedThread!=null)
+                {
+                    connectedThread.write(String.valueOf(87));
+                    connectedThread.write(String.valueOf(191));
+
+                    Handler mHandler = new Handler();
+                    mHandler.postDelayed(new Runnable()  {
+                        public void run() {
+                            // 시간 지난 후 실행할 코딩
+                            connectedThread.write(String.valueOf(63));
+                            connectedThread.write(String.valueOf(191));
+                        }
+                    }, 500);
+                }
+            }
             else if(textView.getText().equals("왼쪽"))
             {
                 if(connectedThread!=null)
                 {
+                    connectedThread.write(String.valueOf(63));
+                    connectedThread.write(String.valueOf(180));
 
-                    connectedThread.write(String.valueOf(66));
-                    connectedThread.write(String.valueOf(183));
+                    Handler mHandler = new Handler();
+                    mHandler.postDelayed(new Runnable()  {
+                        public void run() {
+                            // 시간 지난 후 실행할 코딩
+                            connectedThread.write(String.valueOf(95));
+                            connectedThread.write(String.valueOf(170));
+                        }
+                    }, 250); // 0.25초후
                 }
             }
             else if(textView.getText().equals("오른쪽"))
             {
                 if(connectedThread!=null)
                 {
-                    connectedThread.write(String.valueOf(86));
+                    connectedThread.write(String.valueOf(87));
                     connectedThread.write(String.valueOf(191));
+
+                    Handler mHandler = new Handler();
+                    mHandler.postDelayed(new Runnable()  {
+                        public void run() {
+                            // 시간 지난 후 실행할 코딩
+                            connectedThread.write(String.valueOf(95));
+                            connectedThread.write(String.valueOf(170));
+                        }
+                    }, 500); // 0.5초후
                 }
             }
             else if(textView.getText().equals("정지"))
